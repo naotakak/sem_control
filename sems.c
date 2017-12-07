@@ -9,11 +9,9 @@
 
 int main(int argc, char *argv[]) {
   int md, val;
-  printf("B\n");
-  if (argc > 2) {
-    printf("A\n");
+
+  if (argc > 1) {
     if (!strcmp(argv[1], "-c")) {
-      printf("H\n");
       if (argv[2]) {
         md = semget(KEY, 1, IPC_CREAT | IPC_EXCL | 0664);
         if (md == -1) {
@@ -23,8 +21,8 @@ int main(int argc, char *argv[]) {
         printf("semaphore created: %d\n", md);
         printf("argv %d\n", atoi(argv[2]));
         semctl(md, 0, SETVAL, atoi(argv[2]));
-        //val = semctl(md, 0, GETVAL);
-        val = atoi(argv[2]);
+        val = semctl(md, 0, GETVAL);
+        //val = atoi(argv[2]);
         printf("value set: %d\n", val);
       }
       else {
@@ -41,9 +39,9 @@ int main(int argc, char *argv[]) {
       val = semctl(md, 0, IPC_RMID);
       printf("semaphore removed: %d\n", val);
     }
-    else {
-      printf("Incorrect arguments\n");
-    }
+  }
+  else {
+    printf("Incorrect arguments\n");
   }
   return 0;
 }
